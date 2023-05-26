@@ -88,12 +88,18 @@ endif()
 file(MAKE_DIRECTORY bin)
 
 # Common SDK include directories
+include_directories(submods/vkfw/include)
 include_directories(submods/GSL/include)
 include_directories(submods/glm)
 include_directories(submods/Vulkan-Hpp)
 
 # app includes
 include_directories(src)
+
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+add_subdirectory(submods/glfw)
 
 # Root source code
 add_subdirectory(src)
