@@ -88,7 +88,6 @@ endif()
 file(MAKE_DIRECTORY bin)
 
 # Common SDK include directories
-include_directories(submods/vkfw/include)
 include_directories(submods/GSL/include)
 include_directories(submods/glm)
 include_directories(submods/Vulkan-Hpp)
@@ -97,15 +96,15 @@ include_directories(submods/sdlpp)
 # app includes
 include_directories(src)
 
+set(SOURCES_EXT
+
+	${PROJECT_SOURCE_DIR}/submods/Vulkan-Hpp/samples/utils/utils.cpp
+)
+
 set(SDL2_DISABLE_INSTALL ON CACHE BOOL "" FORCE)
 set(SDL_STATIC ON CACHE BOOL "" FORCE)
 set(SDL_SHARED OFF CACHE BOOL "" FORCE)
 add_subdirectory(submods/SDL)
-
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-add_subdirectory(submods/glfw)
 
 add_subdirectory(submods/Vulkan-Hpp/RAII_Samples/utils)
 

@@ -5,9 +5,8 @@
 
 #include "glm/glm.hpp"
 #include "gsl/gsl"
-#include "vkfw/vkfw.hpp"
 
-//#include "RAII_Samples/utils/utils.hpp"
+#include "RAII_Samples/utils/utils.hpp"
 #include "vulkan/vulkan.hpp"
 
 #include "SDL_vulkan.h"
@@ -22,7 +21,7 @@ auto main() -> int
 
     try {
 
-        //vk::raii::Context context;
+        vk::raii::Context context;
 
         sdl::Init init( SDL_INIT_VIDEO );
 
@@ -52,11 +51,11 @@ auto main() -> int
                     }
                 }
 
-                auto resultExt = SDL_Vulkan_GetInstanceExtensions( w.get(), &extensionCount, extStrArr.data() );
-                if ( resultExt != SDL_TRUE ) {
-                    std::cout << "ERROR with extension request in SDL_Vulkan_GetInstanceExtensions" << std::endl;
-                    return 1;
-                }
+                //auto resultExt = SDL_Vulkan_GetInstanceExtensions( w.get(), &extensionCount, extStrArr.data() );
+                //if ( resultExt != SDL_TRUE ) {
+                //    std::cout << "ERROR with extension request in SDL_Vulkan_GetInstanceExtensions" << std::endl;
+                //    return 1;
+                //}
 
                 // initialize the vk::ApplicationInfo structure
                 vk::ApplicationInfo applicationInfo( AppName.c_str(), 1, EngineName.c_str(), 1, VK_API_VERSION_1_2 );
@@ -64,9 +63,31 @@ auto main() -> int
                 vk::InstanceCreateInfo instanceCreateInfo( {}, &applicationInfo, {}, {}, extensionCount, extStrArr.data(), nullptr );
 
                 // create an Instance
-                vk::Instance instance = vk::createInstance( instanceCreateInfo );
+                vk::raii::Instance instance( context, instanceCreateInfo );
 
-                //vk::DebugUtilsMessengerEXT debugUtilsMessenger = instance.createDebugUtilsMessengerEXT( makeDebugUtilsMessengerCreateInfoEXT() );
+#if !defined( NDEBUG )
+                vk::raii::DebugUtilsMessengerEXT debugUtilsMessenger( instance, vk::su::makeDebugUtilsMessengerCreateInfoEXT() );
+#endif
+
+                // create the surface data based on the window
+                VkSurfaceKHR surface;
+                SDL_Vulkan_CreateSurface( w.get(), static_cast<VkInstance>( *instance ), &surface );
+
+                // pass it to RAII type
+                vk::SurfaceKHR sdlSurfaceKHR( surface );
+
+                // setup device
+                vk::raii::PhysicalDevice physicalDevice = vk::raii::PhysicalDevices( instance ).front();
+
+                // find the index of the first queue family that supports graphics
+                uint32_t graphicsQueueFamilyIndex = vk::su::findGraphicsQueueFamilyIndex( physicalDevice.getQueueFamilyProperties() );
+
+                // create a Device
+                float queuePriority = 0.0f;
+                vk::DeviceQueueCreateInfo deviceQueueCreateInfo( {}, graphicsQueueFamilyIndex, 1, &queuePriority );
+                vk::DeviceCreateInfo deviceCreateInfo( {}, deviceQueueCreateInfo );
+
+                vk::raii::Device device( physicalDevice, deviceCreateInfo );
             }
         }
 
