@@ -9,10 +9,11 @@
 	path = submods/GSL
 	url = https://github.com/microsoft/GSL.git
 	branch = main
-[submodule "submods/glfw"]
-	path = submods/glfw
-	url = https://github.com/glfw/glfw.git
-[submodule "submods/vkfw"]
-	path = submods/vkfw
-	url = https://github.com/Cvelth/vkfw.git
-	branch = main
+[submodule "submods/sdlpp"]
+	path = submods/sdlpp
+	url = https://github.com/mika314/sdlpp.git
+	branch = master
+[submodule "submods/SDL"]
+	path = submods/SDL
+	url = https://github.com/libsdl-org/SDL.git
+	branch = release-2.26.x
