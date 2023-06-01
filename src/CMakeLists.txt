@@ -23,7 +23,9 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${PROJECT_TREE_SOURCES})
 if(UNIX AND NOT APPLE)
     target_link_libraries(${PROJECT_NAME} glfw)
     target_link_libraries(${PROJECT_NAME} SDL2-static)
-
+    target_link_libraries(${PROJECT_NAME} glslang)
+    target_link_libraries(${PROJECT_NAME} glslang-default-resource-limits)
+    target_link_libraries(${PROJECT_NAME} SPIRV)
     target_link_libraries(${PROJECT_NAME} vulkan)
 
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-Wl,-rpath,./")

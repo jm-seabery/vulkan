@@ -91,6 +91,7 @@ file(MAKE_DIRECTORY bin)
 include_directories(submods/GSL/include)
 include_directories(submods/glm)
 include_directories(submods/Vulkan-Hpp)
+include_directories(submods/Vulkan-Hpp/glslang)
 include_directories(submods/sdlpp)
 
 # app includes
@@ -98,6 +99,8 @@ include_directories(src)
 
 set(SOURCES_EXT
 
+	${PROJECT_SOURCE_DIR}/submods/Vulkan-Hpp/samples/utils/shaders.cpp
+	${PROJECT_SOURCE_DIR}/submods/Vulkan-Hpp/samples/utils/math.cpp
 	${PROJECT_SOURCE_DIR}/submods/Vulkan-Hpp/samples/utils/utils.cpp
 )
 
@@ -106,7 +109,11 @@ set(SDL_STATIC ON CACHE BOOL "" FORCE)
 set(SDL_SHARED OFF CACHE BOOL "" FORCE)
 add_subdirectory(submods/SDL)
 
+add_subdirectory(submods/Vulkan-Hpp)
 add_subdirectory(submods/Vulkan-Hpp/RAII_Samples/utils)
+
+set(SKIP_GLSLANG_INSTALL ON CACHE BOOL "" FORCE)
+add_subdirectory(submods/Vulkan-Hpp/glslang)
 
 # Root source code
 add_subdirectory(src)
